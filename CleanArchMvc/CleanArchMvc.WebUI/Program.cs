@@ -1,3 +1,5 @@
+using CleanArchMvc.Domain.Interfaces;
+using CleanArchMvc.Infra.Data.Repositories;
 using CleanArchMvc.Infra.Ioc;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,7 +33,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Categories}/{action=Index}/{id?}");
 
 app.Run();
 
