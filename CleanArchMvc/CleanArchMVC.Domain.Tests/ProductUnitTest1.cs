@@ -47,6 +47,14 @@ namespace CleanArchMVC.Domain.Tests
         }
 
         [Fact]
+        public void CreateProduct_WithNullImageName_NoNullReferenceException()
+        {
+            Action action = () => new Product(1, "Product Teste", "Product Description", 9.99m, 99, null);
+
+            action.Should().NotThrow<NullReferenceException>();
+        }
+
+        [Fact]
         public void CreateProduct_WithEmptyImageName_NoDomainException()
         {
             Action action = () => new Product(1, "Product Teste", "Product Description", 9.99m, 99, "Image teste");
@@ -70,7 +78,5 @@ namespace CleanArchMVC.Domain.Tests
 
             action.Should().Throw<DomainExceptionValidation>().WithMessage("Invalid stock value");
         }
-
-
     }
 }
