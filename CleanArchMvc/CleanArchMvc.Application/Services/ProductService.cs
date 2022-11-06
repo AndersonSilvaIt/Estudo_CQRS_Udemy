@@ -1,30 +1,39 @@
 ﻿using AutoMapper;
 using CleanArchMvc.Application.DTO;
 using CleanArchMvc.Application.Interfaces;
+using CleanArchMvc.Application.Products.Queries;
 using CleanArchMvc.Domain.Entities;
-using CleanArchMvc.Domain.Interfaces;
+using MediatR;
 
 namespace CleanArchMvc.Application.Services
 {
     public class ProductService : IProductService
     {
-        private readonly IProductRepository _productRepository;
         private readonly IMapper _mapper;
+        private readonly IMediator _mediator;
 
-        public ProductService(IProductRepository productRepository, IMapper mapper)
+        public ProductService(IMapper mapper, IMediator mediator)
         {
-            _productRepository = productRepository;
             _mapper = mapper;
+            _mediator = mediator;
         }
 
         public async Task<IEnumerable<ProductDTO>> GetProducts()
         {
-            var productsEntity = await _productRepository.GetProductsAsync();
+            //var productsEntity = await _productRepository.GetProductsAsync();
+            //
+            //return _mapper.Map<IEnumerable<ProductDTO>>(productsEntity);
 
-            return _mapper.Map<IEnumerable<ProductDTO>>(productsEntity);
+            var productQuery = new GetProductsQuery();
+            if (productQuery == null)
+                throw new Exception($"Entity could not be loaded.");
+
+            var result = await _mediator.Send(productQuery);
+
+            return _mapper.Map<IEnumerable<ProductDTO>>(result);
         }
 
-        public async Task<ProductDTO> GetProductCategory(int? id)
+       /* public async Task<ProductDTO> GetProductCategory(int? id)
         {
             var productEntity = await _productRepository.GetProductoCategoryAsync(id);
 
@@ -55,6 +64,6 @@ namespace CleanArchMvc.Application.Services
             var productEntity = await _productRepository.GetByIdAsync(id);
 
             await _productRepository.RemoveAsync(productEntity);
-        }
+        }*/
     }
 }
